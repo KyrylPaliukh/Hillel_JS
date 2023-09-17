@@ -14,8 +14,12 @@ function multiplication(a, b) {
     console.log(`Результат множення: ${a} * ${b} = ${result}`);
 }
 function division(a, b) {
+    if (b === 0) {
+        console.log('Ділення на нуль неможливе');
+    } else {
         let result = a / b;
         console.log(`Результат поділу: ${a} / ${b} = ${result}`);
+    }
 }
 addition(operand1, operand2);
 subtraction(operand1, operand2);
