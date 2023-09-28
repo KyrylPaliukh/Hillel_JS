@@ -16,7 +16,6 @@ const user = {
 user.name = "Pete";
 console.log(user.name);
 // Так, це працюватиме, тому що ми змінюємо властивість в об'єкті, а не змінюємо константу
-
 // Task 3
 let salaries = {
     John: 100,
