@@ -7,5 +7,4 @@ const exponentiation = function (number, degree) {
   const result = number ** degree;
   alert(`Результат: ${result}`);
 };
-
 mainFunction(exponentiation);
