@@ -1,8 +1,8 @@
-const text = document.querySelector('[data-text]');
-const div = document.querySelector('[data-div]');
-text.addEventListener('focus', () => {
-  div.style.display = 'block';
-});
-text.addEventListener('blur', () => {
-  div.style.display = 'none';
+document.addEventListener('DOMContentLoaded', () => {
+  const img = document.querySelector('[data-img]');
+  const imgFolder = '../img/';
+  const numberOfImg = 9;
+  const randomImgIndex = Math.floor(Math.random() * numberOfImg) + 1;
+  const imgPath = `${imgFolder}${randomImgIndex}.jpg`;
+  img.src = imgPath;
 });
