@@ -1,7 +1,33 @@
 @import url('reset.css');
-.bodydiv {
+h1 {
+    padding: 12px;
+    text-align: center;
+    font-size: 44px;
+}
+.photogallery {
     display: flex;
     flex-flow: row;
     justify-content: center;
+    gap: 20px;
     padding-top: 50px;
+    font-size: 20px;
+}
+img {
+    cursor: pointer;
+}
+.tabs {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 20px;
+    font-size: 20px;
+}
+.tab {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #000;
+}
+.content {
+    display: none;
 }
