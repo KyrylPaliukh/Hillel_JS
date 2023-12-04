@@ -6,42 +6,24 @@
         <link rel="stylesheet" href="css/style.css" />
     </head>
     <body>
-        <h1>Фото галерея</h1>
-        <div class="photogallery" data-img="data-img">
-            <div class="textdiv">
-                <img
-                    src="img/pic1.jpg"
-                    alt="phtoto-one"
-                    width="320"
-                    height="213"
-                />
-            </div>
-            <div class="textdiv">
-                <img
-                    src="img/pic2.jpg"
-                    alt="phtoto-two"
-                    width="320"
-                    height="213"
-                />
-            </div>
-            <div class="textdiv">
-                <img
-                    src="img/pic3.jpg"
-                    alt="phtoto-three"
-                    width="320"
-                    height="213"
-                />
-            </div>
+        <div>
+            <h1>Color Scheme Selector</h1>
+            <form id="colorForm">
+                <label>
+                    <input
+                        type="radio"
+                        name="colorScheme"
+                        value="light"
+                        checked
+                    />
+                    Light
+                </label>
+                <label>
+                    <input type="radio" name="colorScheme" value="dark" />
+                    Dark
+                </label>
+            </form>
         </div>
-        <h1>Табуляція</h1>
-        <div class="tabs" data-tab="data-tab">
-            <div class="tab" data-tab="content1">Вкладка 1</div>
-            <div class="tab" data-tab="content2">Вкладка 2</div>
-            <div class="tab" data-tab="content3">Вкладка 3</div>
-        </div>
-        <div id="content1" class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque facere, voluptatibus?</div>
-        <div id="content2" class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, animi assumenda commodi corporis cum dolorem, enim exercitationem expedita facilis fugit ipsum maxime nihil placeat, quisquam quod saepe tempora veritatis vitae! Dolor doloremque eveniet, facilis harum illum in itaque maiores, maxime minima nemo odio quas sint vitae voluptatem voluptatum? Accusantium, asperiores!</lorem50></div>
-        <div id="content3" class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aspernatur consectetur distinctio, dolorem eius explicabo id incidunt laudantium officia quod, quos sunt vel voluptas, voluptatibus?</div>
         <script src="./js/script.js"></script>
     </body>
 </html>

@@ -1,23 +1,27 @@
-const images = document.querySelectorAll('[data-img] img');
-images.forEach((img) => {
-  img.addEventListener('click', () => {
-    if (img.style.width === '640px' && img.style.height === '426px') {
-      img.style.width = '320px';
-      img.style.height = '213px';
-    } else {
-      img.style.width = '640px';
-      img.style.height = '426px';
-    }
-  });
-});
-const tabs = document.querySelectorAll('.tab');
-const contents = document.querySelectorAll('.content');
-tabs.forEach((tab) => {
-  tab.addEventListener('click', () => {
-    const targetId = tab.getAttribute('data-tab');
-    contents.forEach((content) => {
-      content.style.display = 'none';
-    });
-    document.getElementById(targetId).style.display = 'block';
-  });
+document.addEventListener('DOMContentLoaded', () => {
+  const colorForm = document.getElementById('colorForm');
+
+  const saveColorScheme = (colorScheme) => {
+    localStorage.setItem('colorScheme', colorScheme);
+  };
+
+  const applyColorScheme = (colorScheme) => {
+    document.body.classList.remove('light', 'dark');
+    document.body.classList.add(colorScheme);
+  };
+
+  const formHandler = (e) => {
+    const selectedColorScheme = colorForm.querySelector('input[name="colorScheme"]:checked').value;
+    saveColorScheme(selectedColorScheme);
+    applyColorScheme(selectedColorScheme);
+  };
+
+  colorForm.addEventListener('change', formHandler);
+
+  const savedColorScheme = localStorage.getItem('colorScheme');
+  if (savedColorScheme) {
+    applyColorScheme(savedColorScheme);
+
+    colorForm.querySelector(`input[value="${savedColorScheme}"]`).checked = true;
+  }
 });
