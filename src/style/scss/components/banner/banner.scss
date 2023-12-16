@@ -1,0 +1,47 @@
+.banner {
+  @extend %terms;
+
+  @include bg-image('./../../assets/images/jpg/empoyee.jpg');
+
+  height: 100vh;
+  padding-top: $header-height;
+
+  .container {
+    @extend %height100;
+
+    position: relative;
+
+    &::after {
+      $height: 70;
+
+      @include bg-image('./../../assets/images/svg/dots.svg');
+
+      content: '';
+
+      position: absolute;
+      right: 0;
+      bottom: -($height / 2) + px;
+
+      display: block;
+
+      width: 400px;
+      height: $height + px;
+    }
+  }
+
+  &__content {
+    @extend %height100;
+  }
+
+
+  h1 {
+    max-width: 661px;
+    margin-bottom: 80px;
+    color: $additional-font-color;
+  }
+
+  &__test {
+    margin-bottom: 20px;
+  }
+}
+
