@@ -1,33 +1,24 @@
-const { src, dest } = require('gulp');
+const { watch } = require('gulp');
 
-const copyScss = () => src('dist/**/*.scss')
-  .pipe(dest('build/styles'));
-
-exports.copy = copyScss;
-
-const { parallel } = require('gulp');
-
-const sassCompile = (done) => {
-  console.log('Compile SASS to CSS');
+const changeAppStylesFile = (done) => {
+  console.log('Файл index.scss змінився');
 
   done();
 };
 
-const pugCompile = (done) => {
-  console.log('Compile Pug to HTML');
+const checkFileStructure = (done) => {
+  console.log('Змінилась структура файлів');
 
   done();
 };
 
-const imagesOptimize = (done) => {
-  console.log('Optimize Images');
-
-  done();
+const watchers = () => {
+  watch('src/style/scss/index.scss', { events: 'change' }, changeAppStylesFile);
+  watch('src/style/scss/', { events: ['add', 'unlink'] }, checkFileStructure);
 };
 
-exports.layoutCompile = parallel(sassCompile, pugCompile);
-exports.assetsOptimize = imagesOptimize;
+exports.watchers = watchers;
 
 const { series } = require('gulp');
 
-exports.default = series(copyScss, exports.layoutCompile, exports.assetsOptimize);
+exports.default = series(watchers);
