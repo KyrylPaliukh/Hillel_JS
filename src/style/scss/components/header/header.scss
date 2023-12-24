@@ -1,0 +1,42 @@
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  max-height: $header-height;
+  padding: 24px 0;
+
+  &.text-dark &__menu a {
+     color: black;
+     outline: none;
+  }
+
+  &__menu {
+    ul {
+      @extend %height100;
+
+      gap: 60px;
+    }
+
+    li:last-child a {
+        @extend %default-border-radius;
+        @extend %default-transition;
+
+        padding: 7px 19px 4px;
+        text-transform: uppercase;
+        background-color: $accent-color;
+        border: 1px solid $accent-color;
+
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
+
+    a {
+      font-size: $font-custom;
+      color: $additional-font-color;
+    }
+  }
+}

@@ -1,0 +1,5 @@
+@mixin bg-image($img-url) {
+  @extend %bg-image;
+
+  background-image: url($img-url);
+}
