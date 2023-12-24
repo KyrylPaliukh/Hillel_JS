@@ -1,24 +1,43 @@
-const { watch } = require('gulp');
+const {
+  src, dest, parallel, series, watch,
+} = require('gulp');
+const sass = require('gulp-sass')(require('sass'));
+const pug = require('gulp-pug');
+const browserSync = require('browser-sync').create();
 
-const changeAppStylesFile = (done) => {
-  console.log('Файл index.scss змінився');
+const buildSass = () => {
+  console.log('Компиляція SASS');
 
-  done();
+  return src('dist/sass/*.scss')
+    .pipe(sass())
+    .pipe(dest('build/styles/'))
+    .pipe(browserSync.stream());
 };
 
-const checkFileStructure = (done) => {
-  console.log('Змінилась структура файлів');
+const buildPug = () => {
+  console.log('Компіляція Pug');
 
-  done();
+  return src('dist/pages/*.pug')
+    .pipe(pug())
+    .pipe(dest('build/'))
+    .pipe(browserSync.stream());
 };
 
 const watchers = () => {
-  watch('src/style/scss/index.scss', { events: 'change' }, changeAppStylesFile);
-  watch('src/style/scss/', { events: ['add', 'unlink'] }, checkFileStructure);
+  watch('dist/sass/*.scss', buildSass);
+  watch('dist/pages/*.pug', buildPug);
 };
 
-exports.watchers = watchers;
+const browserSyncJob = () => {
+  browserSync.init({
+    server: 'build/',
+  });
 
-const { series } = require('gulp');
+  watch('dist/sass/*.scss', series(buildSass, browserSync.reload));
+  watch('dist/pages/*.pug', series(buildPug, browserSync.reload));
+};
 
-exports.default = series(watchers);
+exports.build = parallel(buildSass, buildPug);
+exports.development = series(exports.build, parallel(watchers, browserSyncJob));
+
+exports.default = exports.development;
