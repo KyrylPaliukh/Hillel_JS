@@ -1,65 +1,72 @@
-function Student(firstName, lastName, birthYear) {
-  this.firstName = firstName;
-  this.lastName = lastName;
-  this.birthYear = birthYear;
-  this.grades = [];
-  this.attendance = new Array(25).fill(undefined);
-
-  this.getAge = function () {
-    const currentYear = new Date().getFullYear();
-    return currentYear - this.birthYear;
+function getStudentConstructor() {
+  const gradeSettings = {
+    min: 0,
+    max: 100,
   };
 
-  this.getAverageGrade = function () {
-    if (this.grades.length === 0) {
-      return 0;
-    }
-    const sum = this.grades.reduce((total, grade) => total + grade, 0);
-    return sum / this.grades.length;
-  };
+  function checkAttendance(lessonVisited = true, currentLesson, lessonsCount) {
+    if (typeof lessonVisited !== 'boolean') throw new Error('Тип даних має бути булевим');
+    if (currentLesson >= lessonsCount) return console.log('Не можна додати більше 25 уроків');
+    this.attendance[currentLesson] = lessonVisited;
+  }
 
-  this.present = function () {
-    const index = this.attendance.findIndex((status) => status === undefined);
-    if (index !== -1) {
-      this.attendance[index] = true;
-    }
-  };
+  function setGrade(grade, currentLesson) {
+    if (typeof grade !== 'number') throw new Error('Оцінка повинна бути числом');
+    if (grade > gradeSettings.max || grade < gradeSettings.min) throw new Error('Не вдається додати оцінку');
+    const currentLessonIndex = currentLesson - 1;
 
-  this.absent = function () {
-    const index = this.attendance.findIndex((status) => status === undefined);
-    if (index !== -1) {
-      this.attendance[index] = false;
-    }
-  };
+    if (!this.attendance[currentLessonIndex]) throw new Error('Неможливо виставити оцінку, учень не був на уроці');
+    this.grades[currentLesson - 1] = grade;
+  }
 
-  this.summary = function () {
-    const averageGrade = this.getAverageGrade();
-    const attendanceRatio = this.attendance.filter((status) => status === true).length
-      / this.attendance.length;
+  function getAge() {
+    if (typeof this.birthYear !== 'number') throw new Error('Рік народження має бути числом');
+    return new Date().getFullYear() - this.birthYear;
+  }
 
-    if (averageGrade > 90 && attendanceRatio > 0.9) {
-      return 'Молодець!';
-    } if (averageGrade > 70 || attendanceRatio > 0.7) {
-      return 'Добре, але можна краще';
-    }
-    return 'Редиска!';
+  return function StudentConstructor(name, surname, birthYear, lessonsCount = 25) {
+    let currentLesson = 0;
+    return {
+      name,
+      surname,
+      birthYear,
+      grades: new Array(lessonsCount),
+      attendance: new Array(lessonsCount),
+      get currentLesson() {
+        return currentLesson;
+      },
+      getAge() {
+        getAge.call(this);
+      },
+      present() {
+        checkAttendance.call(this, true, currentLesson, lessonsCount);
+        ++currentLesson;
+      },
+      absent() {
+        checkAttendance.call(this, false, currentLesson, lessonsCount);
+        ++currentLesson;
+      },
+      setGrade(grade) {
+        setGrade.call(this, grade, currentLesson);
+      },
+    };
   };
 }
-const student1 = new Student('Кирило', 'Козак', 1991);
-const student2 = new Student('Петро', 'Воїн', 1999);
 
+const Student = getStudentConstructor();
+
+const student1 = new Student('Сергій', 'Сергійович', '1991');
 student1.present();
 student1.present();
 student1.absent();
+student1.present();
+student1.setGrade(20);
+console.log(student1);
 
-student1.grades = [95, 87, 92, 88];
-student2.grades = [78, 80, 92, 94];
-
-console.log(student1.getAge());
-console.log(student2.getAge());
-
-console.log(student1.getAverageGrade());
-console.log(student2.getAverageGrade());
-
-console.log(student1.summary());
-console.log(student2.summary());
+const student2 = new Student('Петро', 'Петрович', '2000');
+student2.present();
+student2.setGrade(50);
+student2.absent();
+student2.absent();
+student2.present();
+console.log(student2);
