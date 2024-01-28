@@ -38,24 +38,33 @@ class PhoneBook {
     this.renderContact(this.#contacts.at(-1));
   }
 
-  // call(contactId) {
-  //     // find contact in this.#contacts and make a call
-  // }
-
   removeContact(contactId) {
-
+    const index = this.#contacts.findIndex((item) => item.id === contactId);
+    if (index !== -1) {
+      this.#contacts.splice(index, 1);
+      this.renderContacts();
+    }
   }
 
-  search() {
-    // will search contact by: name, phone, email
+  search(searchValue) {
+    this.#searchedUsers = this.#contacts.filter((user) => {
+      const lowerCaseName = (user.name || '').toLowerCase();
+      const lowerCasePhone = (user.phone || '').toLowerCase();
+      const lowerCaseEmail = (user.email || '').toLowerCase();
+      return (
+        lowerCaseName.includes(searchValue)
+        || lowerCasePhone.includes(searchValue)
+        || lowerCaseEmail.includes(searchValue)
+      );
+    });
+
+    this.renderContacts();
   }
 
-  #setEvents() {
-    Call.addChangeStatusListener(this.#changeCallStatusHandler);
-    document.querySelector('[data-end-call]').addEventListener('click', this.#endCallHandler);
-    this.#usersListSelector.addEventListener('click', this.#removeHandler);
-    this.#usersListSelector.addEventListener('click', this.#callHandler);
-  }
+  #searchHandler = (event) => {
+    const searchValue = event.target.value.trim().toLowerCase();
+    this.search(searchValue);
+  };
 
   #endCallHandler = () => {
     this.#callControllerInstance.endCallByCaller();
@@ -64,15 +73,22 @@ class PhoneBook {
   #callHandler = ({ target }) => {
     const currentClickedBtn = target.closest(`[${this.#callAttr}]`);
     if (!currentClickedBtn) return;
+
     const contactTemplate = currentClickedBtn.closest('[data-user-id]');
     const contactId = +contactTemplate.getAttribute('data-user-id');
-    const index = this.#contacts.findIndex((item) => item.id === contactId);
-    const currentContact = this.#contacts[index];
+    const currentContact = this.#contacts.find((item) => item.id === contactId);
 
-    document.querySelector('[data-abonent-name]').innerHTML = currentContact.name;
-    this.#callControllerInstance.startCall(this.#contacts[index].phone);
+    if (currentContact && currentContact.name) {
+      const callInfo = currentContact.name;
 
-    this.#modal.show();
+      document.querySelector('[data-abonent-name]').innerHTML = callInfo;
+
+      this.#callControllerInstance.startCall(currentContact.phone, currentContact.name);
+
+      this.#modal.show();
+    } else {
+      console.error('Error: Contact or contact name is undefined.');
+    }
   };
 
   #changeCallStatusHandler = (callStatus) => {
@@ -88,10 +104,16 @@ class PhoneBook {
     if (!currentClickedBtn) return;
     const contactTemplate = currentClickedBtn.closest('[data-user-id]');
     const contactId = +contactTemplate.getAttribute('data-user-id');
-    const index = this.#contacts.findIndex((item) => item.id === contactId);
-    this.#contacts.splice(index, 1);
-    contactTemplate.remove();
+    this.removeContact(contactId);
   };
+
+  renderContacts() {
+    this.#usersListSelector.innerHTML = '';
+    const contactsToRender = this.#searchedUsers.length > 0 ? this.#searchedUsers : this.#contacts;
+    contactsToRender.forEach((user) => {
+      this.renderContact(user);
+    });
+  }
 
   renderContact(user) {
     const isUserInContacts = this.#contacts.some((item) => user.id === item.id);
@@ -125,6 +147,14 @@ class PhoneBook {
 
   static validateSelector(selector) {
     return !!document.querySelector(selector);
+  }
+
+  #setEvents() {
+    Call.addChangeStatusListener(this.#changeCallStatusHandler);
+    document.querySelector('[data-end-call]').addEventListener('click', this.#endCallHandler);
+    this.#usersListSelector.addEventListener('click', this.#removeHandler);
+    this.#usersListSelector.addEventListener('click', this.#callHandler);
+    document.getElementById('contacts-search').addEventListener('input', this.#searchHandler);
   }
 }
 

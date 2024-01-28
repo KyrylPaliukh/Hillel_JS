@@ -7,35 +7,43 @@ class CallController {
     this.#trackCallStatus();
   }
 
-  startCall(phoneNumber) {
-    console.log('startCall start');
+  startCall(phoneNumber, name) {
     if (this.#currentCall) {
-      console.warn('You currently no call!');
+      console.warn('You currently have an ongoing call!');
       return this.#currentCall;
     }
 
-    this.#currentCall = new Call(phoneNumber);
+    const callName = name !== undefined ? name : null;
+    this.#currentCall = new Call(phoneNumber, callName);
   }
 
   #endCall() {
     if (!this.#currentCall) {
-      console.warn('Currect call is not exist 404');
+      console.warn('Current call does not exist (404)');
       return null;
     }
 
     this.#callHistory.push(Object.freeze(this.#currentCall));
+    const callHistoryList = document.getElementById('call-history-list');
+    const historyItem = document.createElement('li');
+    historyItem.className = 'list-group-item';
+
+    const callInfo = this.#currentCall.name || 'Unknown';
+
+    historyItem.textContent = `Call to ${callInfo} - ${new Date()}`;
+    callHistoryList.appendChild(historyItem);
+
     this.#currentCall = null;
   }
 
   endCallByCaller() {
     if (!this.#currentCall) {
-      console.warn('Currect call is not exist 404');
+      console.warn('Current call does not exist');
       return null;
     }
 
     this.#currentCall.endCallOutside();
-    this.#callHistory.push(Object.freeze(this.#currentCall));
-    this.#currentCall = null;
+    this.#endCall();
   }
 
   #trackCallStatus() {

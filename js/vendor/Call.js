@@ -9,15 +9,6 @@ class Call {
 
   #inProgressTimer = null;
 
-  static CALL_STATUSES = {
-    disconnect: 'disconnect',
-    rejected: 'rejected',
-    connecting: 'connecting',
-    inProgress: 'in progress',
-  };
-
-  static changeStatusHandlers = [];
-
   #timerId = null;
 
   #duration = 0;
@@ -28,23 +19,33 @@ class Call {
 
   #phone = null;
 
+  #name = null;
+
   #status = null;
 
-  constructor(phoneNumber) {
+  static CALL_STATUSES = {
+    disconnect: 'disconnect',
+    rejected: 'rejected',
+    connecting: 'connecting',
+    inProgress: 'in progress',
+  };
+
+  static changeStatusHandlers = [];
+
+  constructor(phoneNumber, name = null) {
     if (!Call.validatePhoneNumber(phoneNumber)) {
       throw new Error('Number is not correct');
     }
 
     this.#phone = phoneNumber;
+    this.#name = name;
     this.#changeCallStatus(Call.CALL_STATUSES.connecting);
   }
 
   #changeCallStatus(status) {
     this.#status = status;
-    // this.#debug(this.changeStatusHandlers)
 
     if (this.#status === Call.CALL_STATUSES.connecting) {
-      this.#debug(Call.CALL_STATUSES.connecting);
       this.#startCalcCallDuration();
       this.#startDate = new Date();
       this.#connectionTimer = setTimeout(
@@ -54,20 +55,13 @@ class Call {
     }
 
     if (this.#status === Call.CALL_STATUSES.inProgress) {
-      this.#debug(Call.CALL_STATUSES.inProgress);
       this.#inProgressTimer = setTimeout(
         () => this.#changeCallStatus(Call.CALL_STATUSES.disconnect),
         this.#inProgressTimeout,
       );
     }
 
-    if (this.#status === Call.CALL_STATUSES.rejected) {
-      this.#debug(Call.CALL_STATUSES.rejected);
-      this.#endCall();
-    }
-
-    if (this.#status === Call.CALL_STATUSES.disconnect) {
-      this.#debug(Call.CALL_STATUSES.disconnect);
+    if (this.#status === Call.CALL_STATUSES.rejected || this.#status === Call.CALL_STATUSES.disconnect) {
       this.#endCall();
     }
 
@@ -104,30 +98,20 @@ class Call {
     this.#timerId = null;
   }
 
-  #debug(data) {
-    if (!this.#debugFlag) return;
-
-    if (typeof data === 'object') {
-      console.log(data);
-    }
-
-    console.log(data);
+  #callEventHandlers(...data) {
+    Call.changeStatusHandlers.forEach((handler) => {
+      handler(...data);
+    });
   }
 
   static validatePhoneNumber(phoneNumber) {
     let validated = false;
 
-    if (typeof (phoneNumber) === 'string' && phoneNumber.trim().length > 2) {
+    if (typeof phoneNumber === 'string' && phoneNumber.trim().length > 0) {
       validated = true;
     }
 
     return validated;
-  }
-
-  #callEventHandlers(...data) {
-    Call.changeStatusHandlers.forEach((handler) => {
-      handler(...data);
-    });
   }
 
   static addChangeStatusListener(handler) {
@@ -137,7 +121,7 @@ class Call {
 
   static removeChangeStatusListener(handler) {
     if (typeof handler !== 'function') return;
-    if (this.changeStatusHandlers.length === 0) return;
+    if (Call.changeStatusHandlers.length === 0) return;
 
     const handlerIndex = Call.changeStatusHandlers.findIndex((item) => handler === item);
 

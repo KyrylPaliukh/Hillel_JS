@@ -221,6 +221,7 @@ const users = [
         lng: '57.2232',
       },
     },
+    phone: '(775)976-8894 x41206',
     website: 'ambrose.net',
     company: {
       name: 'Hoeger LLC',
