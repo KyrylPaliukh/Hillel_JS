@@ -28,9 +28,9 @@ class CallController {
     const historyItem = document.createElement('li');
     historyItem.className = 'list-group-item';
 
-    const callInfo = this.#currentCall.name || 'Unknown';
+    const callInfo = this.#currentCall.name || 'Outgoing';
 
-    historyItem.textContent = `Call to ${callInfo} - ${new Date()}`;
+    historyItem.textContent = `Call ${callInfo} - ${new Date()}`;
     callHistoryList.appendChild(historyItem);
 
     this.#currentCall = null;
