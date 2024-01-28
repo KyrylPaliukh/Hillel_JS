@@ -12,16 +12,12 @@ class User {
   constructor({
     id, name, phone, email, website,
   }) {
-    // put data to fields
   }
 
   static isUser(obj) {
-    // check if obj is User instance
   }
 
   get id() {
     return this.#id;
   }
-
-  // your methods
 }
