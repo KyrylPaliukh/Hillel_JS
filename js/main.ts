@@ -1,13 +1,16 @@
-import { BookImpl } from './book.js';
-import { getLastItem } from './generic.js';
-import { processInput } from './union.js';
+import { Task, TaskManager } from "./task.js";
 
-const book = new BookImpl('Title of the Book', 'Author Name', 2022);
-book.getInfo();
+const task1: Task = { id: 1, title: "Навчитись TypeScript", description: "Процесс Навчання", completed: false };
+const task2: Task = { id: 2, title: "Білд таск менеджера", description: "Створення таск менеджера з GUI", completed: false };
 
-const array = [1, 2, 3, 4, 5];
-const lastElement = getLastItem(array);
-console.log('Last Element of the Array:', lastElement);
+const taskManager = new TaskManager<Task>();
+taskManager.addTask(task1);
+taskManager.addTask(task2);
 
-console.log('Processed Input:', processInput(5));
-console.log('Processed Input:', processInput('Hello'));
+console.log("Статус до виконання:");
+console.log(taskManager.getTasks());
+
+taskManager.markTaskAsCompleted(1);
+
+console.log("Статус після виконання:");
+console.log(taskManager.getTasks());
