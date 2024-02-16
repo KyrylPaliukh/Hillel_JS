@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Post Search</title>
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-<script src="./js/script.js"></script>
+<label for="postIdInput">Enter Post ID (1-100):</label>
+<input type="number" id="postIdInput" min="1" max="100">
+<button onclick="searchPost()">Search</button>
+<div id="postContainer"></div>
+<script src="js/script.js"></script>
 </body>
 </html>

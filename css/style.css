@@ -1,0 +1,19 @@
+#postContainer {
+    margin-top: 20px;
+}
+.post {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.post h2 {
+    margin-top: 0;
+}
+.comment {
+    border: 1px solid #eee;
+    border-radius: 3px;
+    padding: 5px;
+    margin-top: 5px;
+    background: #f9f9f9;
+}
