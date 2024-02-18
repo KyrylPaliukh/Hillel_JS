@@ -1,0 +1,24 @@
+#albums-list {
+    list-style-type: none;
+    padding: 0;
+    margin-left: 75px;
+}
+
+#albums-list li {
+    font-size: 1.2em;
+    font-family: sans-serif;
+    color: darkblue;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    cursor: pointer;
+}
+
+#albums-list li::first-letter {
+    color: red;
+}
+#albums-list li:hover {
+    color: red;
+}
+h1 {
+    margin-left: 75px;
+}
