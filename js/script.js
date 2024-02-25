@@ -1,12 +1,17 @@
-$(document).ready(() => {
-  $('#weatherBtn').click(() => {
-    const city = $('#cityInput').val();
+document.addEventListener('DOMContentLoaded', () => {
+  const weatherBtn = document.getElementById('weatherBtn');
+  weatherBtn.addEventListener('click', () => {
+    const city = document.getElementById('cityInput').value;
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=5d066958a60d315387d9492393935c19`;
 
-    $.ajax({
-      url,
-      type: 'GET',
-      success(data) {
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
         const weatherInfo = {
           temperature: data.main.temp,
           pressure: data.main.pressure,
@@ -17,16 +22,16 @@ $(document).ready(() => {
           icon: `http://openweathermap.org/img/w/${data.weather[0].icon}.png`,
         };
         displayWeather(weatherInfo);
-      },
-      error(xhr, status, error) {
-        console.log('Error:', error);
-      },
-    });
+      })
+      .catch((error) => {
+        console.error('Error fetching weather:', error);
+      });
   });
 });
 
 function displayWeather(weather) {
-  $('#weatherInfo').html(`
+  const weatherInfoDiv = document.getElementById('weatherInfo');
+  weatherInfoDiv.innerHTML = `
         <p>Temperature: ${weather.temperature}°C</p>
         <p>Pressure: ${weather.pressure} hPa</p>
         <p>Description: ${weather.description}</p>
@@ -34,5 +39,5 @@ function displayWeather(weather) {
         <p>Wind Speed: ${weather.wind_speed} m/s</p>
         <p>Wind Direction: ${weather.wind_deg}°</p>
         <img src="${weather.icon}" alt="Weather Icon">
-    `);
+    `;
 }
